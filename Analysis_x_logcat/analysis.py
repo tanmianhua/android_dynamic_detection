@@ -214,7 +214,7 @@ def exist_sen_func_uri_contain(class_func, function_real_list):
     return False
 
 def transfer_func_to_sen(function_real_list):
-    sensitives = []
+    sensitives = {}
     for func_to_sen in FUNCTION_TO_SENSITIVE_BEHAVIOR_RULES_FULL_MATCH:
         flag = True
         for func_rule in func_to_sen['function_list']:
@@ -222,10 +222,10 @@ def transfer_func_to_sen(function_real_list):
                 flag = False
                 break;
         if flag:
-            sensitives.append(func_to_sen['name'])
+            sensitives[func_to_sen['name']] = ""
     for func_to_sen in FUNCTION_TO_SENSITIVE_BEHAVIOR_RULES_URI_CONTAIN:
         if exist_sen_func_uri_contain(func_to_sen['function'], function_real_list):
-            sensitives.append(func_to_sen['name'])
+            sensitives[func_to_sen['name']] = ""
     return sensitives
 
 def save_file(file_name, data):
