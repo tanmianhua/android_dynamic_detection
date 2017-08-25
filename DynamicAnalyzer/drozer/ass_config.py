@@ -29,7 +29,7 @@ drozer_server = "127.0.0.1:6001"
 #模拟器adb连接地址
 # adb_server = "127.0.0.1:53001"
 # adb_server = "127.0.0.1:5555"
-adb_server = ""
+adb_server = "192.168.1.132:5555"
 
 cmd_jdb = pinggu_dir+"/tool/jdb.sh"
 #aapt命令

@@ -23,7 +23,7 @@ class AssI18n(object):
     #初始化 [argv 参数列表]
     def init(self, argv):
 
-        self.apk_file = sys.argv[1]
+        self.apk_file = sys.argv[1] + '1.apk'
         self.out_path = sys.argv[1]+".result/"
 
         return False

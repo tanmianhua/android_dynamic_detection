@@ -135,7 +135,7 @@ def download_logs(adb, download_dir):
     return
 
 def dynamic_main(file_path):
-    app_info = get_static_info(file_path + '1.apk')
+    app_info = get_static_info(file_path)
     
     # 开始动态分析
     adb = getADB(DYNAMIC_TOOL_DIR)
@@ -180,7 +180,7 @@ if __name__ == '__main__':
 
     if len(sys.argv) is not 1:
         try:
-            file_path = sys.argv[1]
+            file_path = sys.argv[1] + '1.apk'
             test_dynamic(file_path)
         except Exception as err:
             print traceback.format_exc()

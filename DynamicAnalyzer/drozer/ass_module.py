@@ -277,11 +277,12 @@ class AssModule(AssI18n):
         res = self.do_cmd(ass_config.cmd_adb+adbs+"start-server")
         res = self.do_cmd(ass_config.cmd_adb+adbs+"shell aa")
         if res.find("error: device offline") >=0:
-            #修复失败
-            #--- 进一步处理
-            self.report.LOG_OUT("restart avd")
-            #使用socket 发送修复指令，重启虚拟机
-            return self.restart_avd()
+            # #修复失败
+            # #--- 进一步处理
+            # self.report.LOG_OUT("restart avd")
+            # #使用socket 发送修复指令，重启虚拟机
+            # return self.restart_avd()
+            return False
         return True
     #连接adb
     def connect_adb(self):#连接adb
@@ -315,7 +316,7 @@ class AssModule(AssI18n):
             self.adb(cmd)
 
     #连接adb   
-    def adb(self, cmd, timeout=300):#连接adb
+    def adb(self, cmd, timeout=200):#连接adb
         adbs = " "
         if len(ass_config.adb_server)>0:
             adbs = " -s "+q(ass_config.adb_server)+" "
