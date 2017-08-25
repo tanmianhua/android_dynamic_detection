@@ -1,10 +1,14 @@
 # -*- coding: utf8 -*-
 
 import os
-os.environ.update({"DJANGO_SETTINGS_MODULE": "MobSF.settings"})
+
+import sys
+
+from DynamicAnalyzer.drozer.ass_report import AssReport
+from DynamicAnalyzer.drozer.ass_module_dynamic import AssDynamic
+from DynamicAnalyzer.drozer.ass_module_deny import AssDeny
 import shutil
 import MobSF.settings as SETTINGS
-
 from DynamicAnalyzer.pyWebProxy.pywebproxy import Proxy
 from DynamicAnalyzer.views.android.android_avd import avd_load_wait
 from DynamicAnalyzer.views.android.android_avd import refresh_avd
@@ -22,9 +26,9 @@ from StaticAnalyzer.views.shared_func import Unzip
 import subprocess
 import time
 import traceback
-
 from Analysis_x_logcat.analysis import analysis_x_logcat
 
+os.environ.update({"DJANGO_SETTINGS_MODULE": "MobSF.settings"})
 BASE_DIR = './'
 UPLOAD_DIR = os.path.join(BASE_DIR, 'uploads/')
 DOWNLOAD_DIR = os.path.join(BASE_DIR, 'downloads/')
@@ -88,7 +92,7 @@ def connect_device(adb):
         connect(DYNAMIC_TOOL_DIR)
     return
 
-def auto_app_test(adb, packagename):
+def auto_app_test(adb, packagename, file_path):
     print u'\n[INFO] 开始自动化测试...'
     # monkey 测试，输出太多，重定向输出
     p = subprocess.Popen([adb, '-s', get_identifier(), 'shell', 
@@ -106,8 +110,15 @@ def auto_app_test(adb, packagename):
             p.terminate()
             break
         time.sleep(0.5)
-    
-    # TODO: 添加其他测试方法
+
+    #  TODO: 添加其他测试方法
+    # drozer 測試
+    report = AssReport()
+    report.modules.append(AssDynamic(report))
+    report.modules.append(AssDeny(report))
+    report.main()
+    out_path = file_path + ".result"
+    report.out_JSON_file(out_path)
     return
 
 def download_logs(adb, download_dir):
@@ -124,7 +135,7 @@ def download_logs(adb, download_dir):
     return
 
 def dynamic_main(file_path):
-    app_info = get_static_info(file_path)
+    app_info = get_static_info(file_path + '1.apk')
     
     # 开始动态分析
     adb = getADB(DYNAMIC_TOOL_DIR)
@@ -138,7 +149,7 @@ def dynamic_main(file_path):
     install_and_run(DYNAMIC_TOOL_DIR, app_info['apk_path'], app_info['packagename'], app_info['mainactivity'], True)
     time.sleep(60)
     
-    auto_app_test(adb, app_info['packagename'])
+    auto_app_test(adb, app_info['packagename'], file_path)
     
     download_dir = DOWNLOAD_DIR + app_info['file_md5'] + '/'
     download_logs(adb, download_dir)
@@ -157,9 +168,7 @@ def print_x_log_analysis_result(result):
         print temp
     return
 
-def test_dynamic():
-    print u'请输入被检测apk文件的绝对路径：'
-    file_path = raw_input()
+def test_dynamic(file_path):
     if file_path.startswith('"') and file_path.endswith('"'):
         file_path = file_path[1:-1]
     print 'file_path:', file_path
@@ -168,8 +177,14 @@ def test_dynamic():
     return
 
 if __name__ == '__main__':
-    try:
-        test_dynamic()
-    except Exception as err:
-        print traceback.format_exc()
-    os.kill(os.getpid(), signal.SIGTERM)
+
+    if len(sys.argv) is not 1:
+        try:
+            file_path = sys.argv[1]
+            test_dynamic(file_path)
+        except Exception as err:
+            print traceback.format_exc()
+        os.kill(os.getpid(), signal.SIGTERM)
+    else:
+        print 'python whatever.py [APK_FILE]'
+
