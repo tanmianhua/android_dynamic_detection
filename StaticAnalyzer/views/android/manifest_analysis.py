@@ -28,7 +28,7 @@ def get_manifest(app_dir, toosl_dir, typ, binary):
         with open(app_dir + 'new_AndroidManifest.xml', 'w') as file:
             file.write(dat)
         try:
-            dat = dat.decode('gb2312', 'ignore')
+            dat_windows = dat.decode('gb2312', 'ignore')
         except Exception as err:
             print "davidblus:", traceback.format_exc()
             print 'type(dat):', type(dat)
@@ -36,22 +36,10 @@ def get_manifest(app_dir, toosl_dir, typ, binary):
         
         try:
             print "[INFO] Parsing AndroidManifest.xml"
-            manifest = minidom.parseString(dat)
-        except:
+            manifest = minidom.parseString(dat_windows)
+        except Exception as err:
             # changed by davidblus
-            print "davidblus:", traceback.format_exc()
-            exit()
-            PrintException("[ERROR] Pasrsing AndroidManifest.xml")
-            manifest = minidom.parseString(
-                (
-                    r'<?xml version="1.0" encoding="utf-8"?><manifest xmlns:android='
-                    r'"http://schemas.android.com/apk/res/android" android:versionCode="Failed"  '
-                    r'android:versionName="Failed" package="Failed"  '
-                    r'platformBuildVersionCode="Failed" '
-                    r'platformBuildVersionName="Failed XML Parsing" ></manifest>'
-                )
-            )
-            print "[WARNING] Using Fake XML to continue the Analysis"
+            manifest = minidom.parseString(dat)
         return manifest
     except:
         PrintException("[ERROR] Parsing Manifest file")
@@ -75,6 +63,7 @@ def manifest_data(mfxml):
         mainact = ''
         androidversioncode = ''
         androidversionname = ''
+        application_name = ''
         permissions = mfxml.getElementsByTagName("uses-permission")
         manifest = mfxml.getElementsByTagName("manifest")
         activities = mfxml.getElementsByTagName("activity")
@@ -83,6 +72,9 @@ def manifest_data(mfxml):
         receivers = mfxml.getElementsByTagName("receiver")
         libs = mfxml.getElementsByTagName("uses-library")
         sdk = mfxml.getElementsByTagName("uses-sdk")
+        application = mfxml.getElementsByTagName("application")
+        for node in application:
+            application_name = node.getAttribute("android:name")
         for node in sdk:
             minsdk = node.getAttribute("android:minSdkVersion")
             maxsdk = node.getAttribute("android:maxSdkVersion")
@@ -158,7 +150,8 @@ def manifest_data(mfxml):
             'max_sdk': maxsdk,
             'target_sdk': targetsdk,
             'androver': androidversioncode,
-            'androvername': androidversionname
+            'androvername': androidversionname,
+            'application_name': application_name
         }
 
         return man_data_dic
