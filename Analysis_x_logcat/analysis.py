@@ -266,7 +266,7 @@ def exist_sen_func_uri_contain(class_func, function_real_list):
     return list(api_positions)
 
 def transfer_func_to_sen(function_real_list):
-    sensitives = {}
+    sensitives = []
     for func_to_sen in FUNCTION_TO_SENSITIVE_BEHAVIOR_RULES_FULL_MATCH:
         flag = True
         function_list_apis = []
