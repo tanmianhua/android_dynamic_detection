@@ -9,6 +9,7 @@ from DynamicAnalyzer.drozer.ass_module_dynamic import AssDynamic
 from DynamicAnalyzer.drozer.ass_module_deny import AssDeny
 import shutil
 import MobSF.settings as SETTINGS
+os.environ.update({"DJANGO_SETTINGS_MODULE": "MobSF.settings"})
 from DynamicAnalyzer.pyWebProxy.pywebproxy import Proxy
 from DynamicAnalyzer.views.android.android_avd import avd_load_wait
 from DynamicAnalyzer.views.android.android_avd import refresh_avd
@@ -28,7 +29,7 @@ import time
 import traceback
 from Analysis_x_logcat.analysis import analysis_x_logcat
 
-os.environ.update({"DJANGO_SETTINGS_MODULE": "MobSF.settings"})
+
 BASE_DIR = './'
 UPLOAD_DIR = os.path.join(BASE_DIR, 'uploads/')
 DOWNLOAD_DIR = os.path.join(BASE_DIR, 'downloads/')
