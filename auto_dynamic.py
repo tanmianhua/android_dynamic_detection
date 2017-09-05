@@ -101,7 +101,7 @@ def auto_app_test(adb, packagename, file_path):
     p = subprocess.Popen([adb, '-s', get_identifier(), 'shell', 
                 'monkey', '-p', packagename, 
                 '--ignore-crashes', '--ignore-timeouts', 
-                '--monitor-native-crashes', 
+                '--throttle 200',
                 '-v', '-v', '-v', '1000'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     # 设置超时检查
     start_time = time.time()
@@ -150,7 +150,7 @@ def dynamic_main(file_path):
     
     # Change True to support non-activity components
     install_and_run(DYNAMIC_TOOL_DIR, app_info['apk_path'], app_info['packagename'], app_info['mainactivity'], True)
-    time.sleep(60)
+    time.sleep(30)
     
     auto_app_test(adb, app_info['packagename'], file_path)
     
