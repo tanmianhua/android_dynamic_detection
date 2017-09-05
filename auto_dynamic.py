@@ -96,6 +96,16 @@ def connect_device(adb):
     return
 
 def auto_app_test(adb, packagename, file_path):
+    print u'\n[INFO] 开始drozer测试...'
+    try:
+        report = AssReport()
+        report.modules.append(AssDynamic(report))
+        report.modules.append(AssDeny(report))
+        report.main()
+        out_path = file_path + ".result"
+        report.out_JSON_file(out_path)
+    except:
+        traceback.print_exc()
     print u'\n[INFO] 开始自动化测试...'
     # monkey 测试，输出太多，重定向输出
     p = subprocess.Popen([adb, '-s', get_identifier(), 'shell', 
@@ -115,13 +125,7 @@ def auto_app_test(adb, packagename, file_path):
         time.sleep(0.5)
 
     #  TODO: 添加其他测试方法
-    # drozer 測試
-    report = AssReport()
-    report.modules.append(AssDynamic(report))
-    report.modules.append(AssDeny(report))
-    report.main()
-    out_path = file_path + ".result"
-    report.out_JSON_file(out_path)
+
     return
 
 def download_logs(adb, download_dir):
