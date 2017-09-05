@@ -175,7 +175,7 @@ class AssModule(AssI18n):
     def handler(self,signum, frame):
         raise AssertionError
 
-    def do_cmd(self, cmdline, print_out=True, timeout=3600):#执行cmd
+    def do_cmd(self, cmdline, print_out=True, timeout=60):#执行cmd
         #cmdline = unicode(cmdline,"utf8")
         print("++++ [ CMD ] [%d] %s  " %(timeout,cmdline))
         t_start = datetime.now()
