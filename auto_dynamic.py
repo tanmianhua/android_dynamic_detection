@@ -96,16 +96,6 @@ def connect_device(adb):
     return
 
 def auto_app_test(adb, packagename, file_path):
-    print u'\n[INFO] 开始drozer测试...'
-    try:
-        report = AssReport()
-        report.modules.append(AssDynamic(report))
-        report.modules.append(AssDeny(report))
-        report.main()
-        out_path = file_path + ".result"
-        report.out_JSON_file(out_path)
-    except:
-        traceback.print_exc()
     print u'\n[INFO] 开始自动化测试...'
     # monkey 测试，输出太多，重定向输出
     p = subprocess.Popen([adb, '-s', get_identifier(), 'shell', 
@@ -125,7 +115,16 @@ def auto_app_test(adb, packagename, file_path):
         time.sleep(0.5)
 
     #  TODO: 添加其他测试方法
-
+    print u'\n[INFO] 开始drozer测试...'
+    try:
+        report = AssReport()
+        report.modules.append(AssDynamic(report))
+        report.modules.append(AssDeny(report))
+        report.main()
+        out_path = file_path + ".result"
+        report.out_JSON_file(out_path)
+    except:
+        traceback.print_exc()
     return
 
 def download_logs(adb, download_dir):
@@ -154,7 +153,7 @@ def dynamic_main(file_path):
     
     # Change True to support non-activity components
     install_and_run(DYNAMIC_TOOL_DIR, app_info['apk_path'], app_info['packagename'], app_info['mainactivity'], True)
-    time.sleep(30)
+    time.sleep(15)
     
     auto_app_test(adb, app_info['packagename'], file_path)
     
