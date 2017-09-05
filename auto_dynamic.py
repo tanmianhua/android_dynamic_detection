@@ -101,7 +101,7 @@ def auto_app_test(adb, packagename, file_path):
     p = subprocess.Popen([adb, '-s', get_identifier(), 'shell', 
                 'monkey', '-p', packagename, 
                 '--ignore-crashes', '--ignore-timeouts', 
-                '--throttle 300', '--pct-touch 30', '--pct-motion 70'
+                '--throttle 300', '--pct-touch 30', '--pct-motion 70',
                 '-v', '-v', '-v', '1000'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     # 设置超时检查
     start_time = time.time()
