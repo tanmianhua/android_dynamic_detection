@@ -92,6 +92,7 @@ class AssModule(AssI18n):
 
     def get_smali_dir(self):
         return self.apk_file + ".smali"
+
     def get_java_dir(self):
         return self.apk_file + ".java"
 
